@@ -3,13 +3,13 @@ Julia package for spin-wave calculation.
 
 Compute spin-wave spectrum and spin-spin correlation in momentum space (imaginary part).
 
-Example
+Example on 2D anti-ferromagnetic Heissenberg model. The input is the following
 ```julia
 include("./SpinWave.jl")
 using .SpinWave
 using LinearAlgebra
 using PyPlot
-#--- 2D anti-ferromagnetic Heisenberg Model
+# 2D anti-ferromagnetic Heisenberg Model
 ind = [1 2; 2 1; 3 4; 4 3; 1 2; 3 1; 2 4; 4 2] # interaction index.
 vec = [0 0; 1 0; 0 0; 1 0; 0 0; 0 1; 0 0; 0 1] # distance between two interacting sites.
 H0 = Diagonal([1.0, 1.0, 1.0])
@@ -21,7 +21,9 @@ t = [0 0; 0.5 0; 0 0.5; 0.5 0.5] # sub-lattice index.
 αβ = [1 1;2 2;3 3] # spin summation indeces.
 η = 0.1 # quasi-particle lifetime.
 s = spinsystem(θ,ϕ,ind,vec,mat,αβ,t,η) # cunstruct spin system
-#--- construction
+```
+The computation part is
+```julia
 ωmax = 5.0
 ωl = range(0,ωmax,length=200)
 ε = 1e-5 # avoid zero energy mode
@@ -29,7 +31,7 @@ kp = kpoints([ε ε; 1+ε ε; 1+ε 1+ε; ε ε],[100, 100, 141]); kl = kp.kp
 
 C = zeros(length(ωl),kp.N)
 ek = zeros(kp.N,4)
-#--- Calculate Spin Wave
+# Calculate spin wave
 for i=1:kp.N
     pushk!(s,kl[i,:])
     ek[i,:] .= s.Dk[5:8]
@@ -37,7 +39,7 @@ for i=1:kp.N
         C[j,i] += pushω!(s,ωl[j])
     end
 end
-#--- Plot
+# Plot
 cmax = 3.0
 @. C[C>cmax] = cmax
 pygui(true)
