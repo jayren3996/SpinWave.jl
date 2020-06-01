@@ -4,7 +4,7 @@ Julia package for spin-wave calculation.
 Compute spin-wave spectrum and spin-spin correlation in momentum space (imaginary part).
 
 Example
-'''julia
+```julia
 include("./SpinWave.jl")
 using .SpinWave
 using LinearAlgebra
@@ -45,4 +45,4 @@ contourf(1:kp.N,ωl,C,levels=50,cmap="jet")
 plot(1:kp.N, ek, "--", lw=0.7, color="grey")
 colorbar()
 show()
-'''
+```
