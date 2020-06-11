@@ -3,6 +3,16 @@ Julia package for spin-wave calculation.
 
 Compute spin-wave spectrum and spin-spin correlation in momentum space (imaginary part).
 
+## Installation
+
+Run the following script in the ```Pkg REPL``` :
+
+```julia
+pkg> add https://github.com/jayren3996/SpinWave.jl
+```
+
+## Examples 
+
 Example on 2D anti-ferromagnetic Heissenberg model. The input is the following
 ```julia
 include("./SpinWave.jl")
