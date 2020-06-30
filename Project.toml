@@ -1,7 +1,7 @@
 name = "SpinWave"
 uuid = "5d8f5327-b1cb-4fc0-964a-d944ba32196b"
 authors = ["JayRen <jieren3996@foxmail.com>"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
