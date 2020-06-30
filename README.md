@@ -31,13 +31,13 @@ mat = begin                                    # interaction term.
     for i=1:8 m[i,:,:] .= H0 end
     m
 end
-θ = [0, π, π, 0] # spin direction.
-ϕ = [0, 0, 0, 0] # spin direction.
-t = [0 0; 0.5 0; 0 0.5; 0.5 0.5] # sub-lattice index.
-αβ = [1 1;2 2;3 3] # spin summation indeces.
-η = 0.1 # quasi-particle lifetime.
+θ = [0, π, π, 0]                               # spin direction.
+ϕ = [0, 0, 0, 0]                               # spin direction.
+t = [0 0; 0.5 0; 0 0.5; 0.5 0.5]               # sub-lattice index.
+αβ = [1 1;2 2;3 3]                             # spin summation indeces.
+η = 0.1                                        # quasi-particle lifetime.
 
-s = spinsystem(θ,ϕ,ind,vec,mat,t,αβ,η) # cunstruct spin system
+s = spinsystem(θ,ϕ,ind,vec,mat,t,αβ,η)         # cunstruct spin system
 ```
 The computation part is
 ```julia
