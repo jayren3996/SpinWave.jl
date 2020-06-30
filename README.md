@@ -47,7 +47,6 @@ The computation part is
 kp = kpoints([0 0;1 0;1 1;0 0],[100, 100, 141], ϵ=1e-5) # avoid zero energy mode
 
 corr, spec = spinwave(s, kp, ωs)
-
 ```
 
 Plot the result
