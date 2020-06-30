@@ -13,7 +13,7 @@ pkg> add https://github.com/jayren3996/SpinWave.jl
 
 ## Algorithm
 
-![Algorithm](Algorithm.jpg)
+![Algorithm](https://raw.github.com/jayren3996/SpinWave.jl/master/Algorithm.jpg)
 
 ## Examples 
 
