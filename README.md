@@ -11,6 +11,10 @@ Run the following script in the ```Pkg REPL``` :
 pkg> add https://github.com/jayren3996/SpinWave.jl
 ```
 
+## Algorithm
+
+![Algorithm](Algorithm.jpg)
+
 ## Examples 
 
 Example on 2D anti-ferromagnetic Heissenberg model. The input is the following

@@ -2,7 +2,8 @@ module SpinWave
 using LinearAlgebra
 export spinsystem, pushk!, pushω!, kpoints
 #--- UV matrix
-function UV(θ,ϕ)
+function UV(θ::AbstractVector,
+            ϕ::AbstractVector)
     N = length(θ)
     U = Matrix{ComplexF64}(undef, N, 3)
     V = Matrix{Float64}(undef, N, 3)
@@ -19,12 +20,18 @@ end
 struct HBlock
     BondH::Matrix{ComplexF64} # BondH[4, NJ]
     DiagH::Vector{Float64}    # DiagH[N]
-    Ind  ::Matrix{Int64}      # Ind[NJ, 2]
-    Vec  ::Matrix{Int64}      # Vec[NJ, d]
+    Ind::Matrix{Int64}        # Ind[NJ, 2]
+    Vec::Matrix{Int64}        # Vec[NJ, d]
 end
 
 sandwich(v1,m,v2) = sum(v1 .* (m * v2))
-function HBlock(U,V,ind,vec,mat,N,NJ)
+function HBlock(U::Matrix{ComplexF64},
+                V::Matrix{Float64},
+                ind::AbstractMatrix,
+                vec::AbstractMatrix,
+                mat::AbstractMatrix,
+                N::Int64,
+                NJ::Int64)
     UC = conj.(U)
     BH = Array{ComplexF64}(undef, 4, NJ)
     DH = zeros(Float64,N)
@@ -41,7 +48,11 @@ function HBlock(U,V,ind,vec,mat,N,NJ)
     HBlock(BH, DH, ind, vec)
 end
 #--- H(k)
-function hamiltonian!(Hk,k,hblock::HBlock,N,NJ)
+function hamiltonian!(Hk::Matrix{ComplexF64},
+                      k::Float64,
+                      hblock::HBlock,
+                      N::Int64,
+                      NJ::Int64)
     BH  = hblock.BondH
     DH  = hblock.DiagH
     ind = hblock.Ind
@@ -67,11 +78,15 @@ function hamiltonian!(Hk,k,hblock::HBlock,N,NJ)
 end
 #--- WBlock
 struct WBlock
-    UU        ::Array{ComplexF64,3}
+    UU::Array{ComplexF64,3}
     Sublattice::Matrix{Float64}
 end
 
-function WBlock(U,t,αβ,N,ND)
+function WBlock(U::Matrix{ComplexF64},
+                t::Matrix{Float64},
+                αβ::Matrix{Int64},
+                N::Int64,
+                ND::Int64)
     UU = Array{ComplexF64}(undef, ND, 2*N, 2*N)
     UC = conj.(U)
     for i=1:ND, j=1:N, k=1:N
