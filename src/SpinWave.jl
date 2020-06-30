@@ -29,6 +29,7 @@ function UV(θ::AbstractVector,
     @. V[:, 1] = sinθ * cosϕ
     @. V[:, 2] = sinθ * sinϕ
     @. V[:, 3] = cosθ
+    U, V
 end
 #--- Kpoints
 struct KPoints
