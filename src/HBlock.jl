@@ -1,5 +1,5 @@
 # Struct
-struct HBlock{T1<:Number, T2<:Real, Tind}
+struct HBlock{T1<:Number, T2<:Real, Tind, Tvec}
     N    ::Int64
     NJ   ::Int64
     Ind  ::Indmat{Tind}     # Ind[NJ, 2]

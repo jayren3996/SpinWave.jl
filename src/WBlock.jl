@@ -1,5 +1,5 @@
 # Struct
-struct WBlock{T1<:NUmber,T2<:Real}
+struct WBlock{T1<:Number,T2<:Real}
     N   ::Int64
     ND  ::Int64
     UU  ::Array{T1,3}
