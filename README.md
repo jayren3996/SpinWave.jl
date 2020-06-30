@@ -37,7 +37,7 @@ t = [0 0; 0.5 0; 0 0.5; 0.5 0.5]               # sub-lattice index.
 αβ = [1 1;2 2;3 3]                             # spin summation indeces.
 η = 0.1                                        # quasi-particle lifetime.
 
-s = spinsystem(θ,ϕ,ind,vec,mat,t,αβ,η)         # cunstruct spin system
+s = spinsystem(θ,ϕ,ind,vec,mat,t,αβ,η)         # construct spin system
 ```
 The computation part is
 ```julia
