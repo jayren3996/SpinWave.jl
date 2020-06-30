@@ -19,7 +19,7 @@ pkg> add https://github.com/jayren3996/SpinWave.jl
 
 Example on 2D anti-ferromagnetic Heissenberg model. The input is the following
 ```julia
-using SpinWave
+using SpinWave 
 using LinearAlgebra
 using PyPlot
 #--- 2D anti-ferromagnetic Heisenberg Model
