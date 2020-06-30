@@ -55,7 +55,7 @@ function pushω!(s::SpinSystem, ω::Real)
     correlation(s.Fk, s.Gkω, s.N)
 end
 #--- solve all
-function solve(s::SpinSystem, ks::Matrix, ωs::AbstractVector)
+function spinwave(s::SpinSystem, ks::Matrix, ωs::AbstractVector)
     nk = size(ks,1)
     nω = length(ωs)
     corr = Array{Float64}(undef, nk,nω)
@@ -69,3 +69,4 @@ function solve(s::SpinSystem, ks::Matrix, ωs::AbstractVector)
     end
     corr, spec
 end
+spinwave(s::SpinSystem,ks::KPoints,ωs::AbstractVector) = spinwave(s,ks.kp,ωs)
