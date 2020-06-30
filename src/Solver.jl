@@ -33,7 +33,7 @@ function spinsystem(θ::Vector,
     ND   = size(αβ, 1)
     U, V = UV(θ, ϕ)
     hb   = hblock(U, V, ind, vec, mat)
-    wb   = WBlock(U, t, αβ)
+    wb   = wblock(U, t, αβ)
     Hk   = Array{Thk}(undef, 2*N, 2*N)
     Wk   = Array{Twk}(undef, ND, 2*N, 2*N)
     Dk   = Array{Tdk}(undef, 2*N)
@@ -43,7 +43,7 @@ function spinsystem(θ::Vector,
     SpinSystem(hb, wb, Hk, Wk, Dk, Tk, Gkω, Fk, η, N, NJ, ND)
 end
 #--- push k
-function pushk!(s::SpinSystem, k::Real)
+function pushk!(s::SpinSystem, k::Vector)
     hamiltonian!(s.Hk, s.hblock, k)
     wmat!(s.Wk, s.wblock, k)
     diagonalization!(s.Dk, s.Tk, s.Hk)
@@ -55,16 +55,17 @@ function pushω!(s::SpinSystem, ω::Real)
     correlation(s.Fk, s.Gkω, s.N)
 end
 #--- solve all
-function solve(s::SpinSystem, ks::Vector, ωs::Vector)
-    nk = length(ks)
+function solve(s::SpinSystem, ks::Matrix, ωs::AbstractVector)
+    nk = size(ks,1)
     nω = length(ωs)
     corr = Array{Float64}(undef, nk,nω)
     spec = Array{Float64}(undef, nk,s.N)
     for i=1:nk
-        pushk!(s,ks[i])
+        pushk!(s,ks[i,:])
         spec[i,:] .= s.Dk[1:s.N]
         for j=1:nω
-            corr[i,j] = pushω!(s,ωs[i])
+            corr[i,j] = pushω!(s,ωs[j])
         end
     end
+    corr, spec
 end

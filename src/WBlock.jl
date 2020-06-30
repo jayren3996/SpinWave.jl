@@ -21,7 +21,7 @@ function wblock(U::Umat,
         UU[i,j+N,k  ] =  U[j,α] * U[k,β]
         UU[i,j+N,k+N] =  U[j,α] * UC[k,β]
     end
-    WBlock(N, NJ, UU, t)
+    WBlock(N, ND, UU, t)
 end
 #--- wmat
 function wmat!(Wk::Array, wb::WBlock, k)

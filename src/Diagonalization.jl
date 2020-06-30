@@ -1,8 +1,8 @@
 #--- Spectrum
-function diagonalization!(D::Matrix,
-                          T::Vector,
+function diagonalization!(D::Vector,
+                          T::Matrix,
                           Hk::Matrix)
-    N = length(T) ÷ 2
+    N = length(D) ÷ 2
     C = cholesky!(Hk)
     Kd = C.L
     K = C.U
@@ -11,7 +11,7 @@ function diagonalization!(D::Matrix,
     vals, vecs = eigen(temp)
     D[1:N] .= -1 * vals[1:N]
     D[N+1:2N] .= vals[N+1:2N]
-    T .= inv(K) * U * Diagonal(sqrt.(D))
+    T .= inv(K) * vecs * Diagonal(sqrt.(D))
 end
 
 function spectrum!(Hk::Matrix, N::Int64)
@@ -19,7 +19,7 @@ function spectrum!(Hk::Matrix, N::Int64)
     real(eigvals!(Hk))
 end
 #--- Green Function
-function green!(Gω::Matrix,
+function green!(Gω::Vector,
                 ω::Real,
                 D::Vector,
                 η::Real,

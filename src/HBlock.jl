@@ -35,11 +35,12 @@ end
 #--- hamiltonian
 function hamiltonian!(Hk::Matrix,
                       hb::HBlock,
-                      k::Real)
-    BH  = hblock.BondH
-    DH  = hblock.DiagH
-    ind = hblock.Ind
-    vec = hblock.Vec
+                      k::Vector)
+    BH  = hb.BondH
+    DH  = hb.DiagH
+    ind = hb.Ind
+    vec = hb.Vec
+    N = hb.N
     fill!(Hk, 0.0)
     for i = 1:hb.NJ
         n, m = ind[i, :]
