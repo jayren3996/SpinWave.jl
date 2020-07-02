@@ -34,16 +34,14 @@ end
 θ = [0, π, π, 0]                               # spin direction.
 ϕ = [0, 0, 0, 0]                               # spin direction.
 t = [0 0; 0.5 0; 0 0.5; 0.5 0.5]               # sub-lattice index.
-αβ = [1 1;2 2;3 3]                             # spin summation indeces.
-η = 0.1                                        # quasi-particle lifetime.
 
-s = spinsystem(θ,ϕ,ind,vec,mat,t,αβ,η)         # construct spin system
+s = spinsystem(θ,ϕ,ind,vec,mat,t)
 ```
 The computation part is
 ```julia
 #--- spin wave calculation
 ωs = range(0, 5, length=200)
-kp = kpoints([0 0;1 0;1 1;0 0],[100, 100, 141], ϵ=1e-5) # avoid zero energy mode
+kp = kpoints([0 0;1 0;1 1;0 0],[100, 100, 141])
 
 corr, spec = spinwave(s, kp, ωs)
 ```
@@ -61,5 +59,4 @@ colorbar()
 show()
 ```
 
-
-
+![Algorithm](https://raw.github.com/jayren3996/SpinWave.jl/master/result.png)
