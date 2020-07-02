@@ -31,9 +31,7 @@ function UV(θ::AbstractVector,
     @. V[:, 3] = cosθ
     U, V
 end
-function kpoints(k::Matrix,
-                 n::Vector;
-                 ϵ::Real=0.0)
+function kpoints(k::Matrix, n::Vector)
     ln = length(n)
     N  = sum(n) - ln + 1
     d  = size(k,2)
@@ -44,9 +42,6 @@ function kpoints(k::Matrix,
             kp[ni:ni+n[i]-1,j] .= 2π * range(k[i,j],k[i+1,j],length=n[i])
         end
         ni += n[i]-1
-    end
-    if ϵ != 0.0
-        kp .+= ϵ
     end
     KPoints(N, kp)
 end

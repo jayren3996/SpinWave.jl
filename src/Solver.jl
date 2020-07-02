@@ -21,7 +21,7 @@ function spinsystem(θ::Vector,
                     mat::Matmat,
                     t::tmat,
                     αβ::αβmat=[1 1;2 2;3 3],
-                    η::Real=0.2;
+                    η::Real=0.1;
                     Thk::DataType=ComplexF64,
                     Twk::DataType=ComplexF64,
                     Tdk::DataType=Float64,
@@ -62,7 +62,7 @@ function spinwave(s::SpinSystem, ks::Matrix, ωs::AbstractVector)
     spec = Array{Float64}(undef, nk,s.N)
     for i=1:nk
         pushk!(s,ks[i,:])
-        spec[i,:] .= s.Dk[1:s.N]
+        spec[i,:] .= s.Dk[s.N+1:end]
         for j=1:nω
             corr[i,j] = pushω!(s,ωs[j])
         end

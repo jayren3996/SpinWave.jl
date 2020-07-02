@@ -1,14 +1,20 @@
 #--- Spectrum
 function diagonalization!(D::Vector,
                           T::Matrix,
-                          Hk::Matrix)
+                          Hk::Matrix;
+                          ϵ::Float64=1e-6)
     N = length(D) ÷ 2
-    C = cholesky!(Hk)
+    C = try
+        cholesky(Hk)
+    catch
+        Hk .+= Diagonal(fill(ϵ,2N))
+        cholesky!(Hk)
+    end
     Kd = C.L
     K = C.U
     Im = Diagonal([ones(N); -ones(N)])
     temp = Hermitian(K * Im * Kd)
-    vals, vecs = eigen(temp)
+    vals, vecs = eigen!(temp)
     D[1:N] .= -1 * vals[1:N]
     D[N+1:2N] .= vals[N+1:2N]
     T .= inv(K) * vecs * Diagonal(sqrt.(D))

@@ -21,7 +21,7 @@ t = [0 0; 0.5 0; 0 0.5; 0.5 0.5] # sub-lattice index.
 s = spinsystem(θ,ϕ,ind,vec,mat,t,αβ,η) # cunstruct spin system
 #--- spin wave
 ωs = range(0, 5, length=200)
-kp = kpoints([0 0;1 0;1 1;0 0],[100, 100, 141], ϵ=1e-5) # avoid zero energy mode
+kp = kpoints([0 0;1 0;1 1;0 0],[100, 100, 141])
 
 corr, spec = spinwave(s, kp, ωs)
 
