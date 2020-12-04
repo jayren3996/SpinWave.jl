@@ -23,7 +23,7 @@ kp = kpoints([0 0;1 0;1 1;0 0],[100, 100, 141])
 
 corr, spec = spinwave(s, kp, ωs)
 #--- Plot
-@. corr[corr>3.0] = 3.0
+@. corr[corr>6.0] = 6.0
 pygui(true)
 figure(dpi=200)
 contourf(1:kp.N,ωs,corr',levels=50,cmap="jet")
