@@ -46,7 +46,7 @@ function kpoints(k::Matrix, n::Vector)
     KPoints(N, kp)
 end
 #--- include
-include("HBLock.jl")
+include("HBlock.jl")
 include("WBlock.jl")
 include("Diagonalization.jl")
 include("Solver.jl")
