@@ -10,6 +10,8 @@ export addsite!, heisenberg, exchange_matrix, dm, addmatrix!, addbond!, validate
 include("Lattices.jl")
 include("QPaths.jl")
 include("Models.jl")
+include("Frames.jl")
+include("Hamiltonians.jl")
 include("Diagonalization.jl")
 
 end
