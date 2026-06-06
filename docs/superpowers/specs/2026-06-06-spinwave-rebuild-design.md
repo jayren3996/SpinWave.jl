@@ -23,7 +23,7 @@ about magnetic models. The current implementation also has correctness defects:
 - the returned correlation array has no stable documented orientation,
 - `Pkg.test()` does not run because there is no `test/runtests.jl`.
 
-The MATLAB SpinW package is the closest mature API reference. Its workflow is:
+The closest mature MATLAB API reference uses this workflow:
 
 1. define a lattice,
 2. add magnetic atoms,
@@ -56,7 +56,7 @@ bags.
 
 ## Non-Goals
 
-- Full SpinW feature parity.
+- Full feature parity with the reference MATLAB package.
 - Crystallographic space-group generation.
 - Incommensurate or multi-k magnetic structures.
 - Automatic magnetic-structure optimization.
@@ -81,8 +81,8 @@ path = qpath([[0, 0, 0], [1, 0, 0], [1, 1, 0]]; points=[100, 100])
 spectrum = spinwave(model, path)
 ```
 
-This is closer to SpinW's mental model than the existing array API, but keeps
-the Julia surface straightforward:
+This is closer to the staged reference workflow than the existing array API, but
+keeps the Julia surface straightforward:
 
 - use typed structs instead of stringly typed modes,
 - use mutating builder methods for model construction,

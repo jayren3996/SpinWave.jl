@@ -22,6 +22,10 @@ makedocs(
         ],
         "Examples" => [
             "Ferromagnetic Chain" => "examples/ferromagnetic-chain.md",
+            "Antiferromagnetic Chain" => "examples/antiferromagnetic-chain.md",
+            "Square-Lattice Antiferromagnet" => "examples/square-lattice-antiferromagnet.md",
+            "Anisotropic Ferromagnetic Chain" => "examples/anisotropic-ferromagnetic-chain.md",
+            "Next-Nearest-Neighbor Chain" => "examples/next-nearest-neighbor-chain.md",
         ],
         "API Reference" => "reference/api.md",
     ],
