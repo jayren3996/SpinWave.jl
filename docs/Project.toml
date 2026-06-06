@@ -1,0 +1,6 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+SpinWave = "5d8f5327-b1cb-4fc0-964a-d944ba32196b"
+
+[compat]
+Documenter = "1"

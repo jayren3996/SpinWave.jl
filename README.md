@@ -1,62 +1,58 @@
 # SpinWave.jl
-Julia package for spin-wave calculation.
 
-Compute spin-wave spectrum and spin-spin correlation in momentum space (imaginary part).
+`SpinWave.jl` is a compact Julia package for linear spin-wave calculations on
+explicit bilinear spin models. It now uses a typed model-building workflow:
+define a lattice, add magnetic sites, register exchange matrices, add bonds,
+choose a reciprocal-space path, and compute a named spectrum object.
+
+The rebuilt core is intentionally focused. It supports dense commensurate
+models with explicit bonds and validates inputs before solving. Space-group bond
+generation, incommensurate structures, form factors, twinning, instrumental
+resolution, and plotting are left for later layers.
 
 ## Installation
-
-Run the following script in the ```Pkg REPL``` :
 
 ```julia
 pkg> add https://github.com/jayren3996/SpinWave.jl
 ```
 
-## Algorithm
+## Quick Start
 
-![Algorithm](https://raw.github.com/jayren3996/SpinWave.jl/master/Algorithm.jpg)
-
-## Examples 
-
-Example on 2D anti-ferromagnetic Heissenberg model. The input is the following
 ```julia
 using SpinWave
-using LinearAlgebra
-using PyPlot
-#--- 2D anti-ferromagnetic Heisenberg Model
-ind = [1 2; 2 1; 3 4; 4 3; 1 2; 3 1; 2 4; 4 2] # interaction index.
-vec = [0 0; 1 0; 0 0; 1 0; 0 0; 0 1; 0 0; 0 1] # distance between two interacting sites.
-mat = begin                                    # interaction term.
-    H0 = Diagonal([1.0, 1.0, 1.0])
-    m = Array{Float64}(undef, 8, 3, 3)
-    for i=1:8 m[i,:,:] .= H0 end
-    m
-end
-θ = [0, π, π, 0]                               # spin direction.
-ϕ = [0, 0, 0, 0]                               # spin direction.
-t = [0 0; 0.5 0; 0 0.5; 0.5 0.5]               # sub-lattice index.
 
-s = spinsystem(θ,ϕ,ind,vec,mat,t)
-```
-The computation part is
-```julia
-#--- spin wave calculation
-ωs = range(0, 5, length=200)
-kp = kpoints([0 0;1 0;1 1;0 0],[100, 100, 141])
+model = SpinModel(lattice([1, 1, 1]))
+addsite!(model, :A, [0, 0, 0]; spin=1, moment=[0, 0, 1])
+addmatrix!(model, :J, heisenberg(-1.0))
+addbond!(model, :J, :A, :A, [1, 0, 0])
 
-corr, spec = spinwave(s, kp, ωs)
+path = qpath([[0.25, 0, 0], [0.5, 0, 0]]; points=[5], labels=["q=1/4", "q=1/2"])
+spec = spinwave(model, path)
+
+spec.energies
 ```
 
-Plot the result
+`spec.energies` has shape `(mode, q)`. Component-resolved correlations are in
+`spec.correlations[a, b, mode, q]`.
+
+Create a broadened energy grid without plotting dependencies:
 
 ```julia
-# Plot
-cmax = 3.0
-@. corr[corr>cmax] = cmax
-pygui(true)
-contourf(1:kp.N, ωs, corr, levels=50, cmap="jet")
-plot(1:kp.N, spec, "--", lw=0.7, color="grey")
-colorbar()
-show()
+grid = broaden(spec, range(0, 4; length=100); eta=0.1)
+size(grid.intensity) # (omega, q)
 ```
 
-![Algorithm](https://raw.github.com/jayren3996/SpinWave.jl/master/result.png)
+## Repository Layout
+
+| Path | Purpose |
+| --- | --- |
+| `src/` | Core model, Hamiltonian, diagonalization, and spectrum code |
+| `test/` | Deterministic unit and smoke tests |
+| `docs/` | Documenter.jl manual and API reference |
+| `examples/` | Runnable scripts that are not tests |
+
+## References
+
+The public workflow is inspired by the staged model construction used by
+[SpinW](https://spinw.org/spinwdoc/), but the implementation is Julian: typed
+objects, explicit validation, and stable result shapes.

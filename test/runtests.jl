@@ -10,4 +10,5 @@ using Test
     include("hamiltonian_tests.jl")
     include("diagonalization_tests.jl")
     include("spinwave_tests.jl")
+    include("docs_smoke_tests.jl")
 end
