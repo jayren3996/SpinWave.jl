@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760.0" height="430.0" viewBox="0 0 760.0 430.0" role="img">
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #222; }
+.title { font-size: 20px; font-weight: 650; }
+.label { font-size: 13px; }
+.tick { font-size: 12px; fill: #444; }
+.grid { stroke: #e5e7eb; stroke-width: 1; }
+.axis { stroke: #333; stroke-width: 1.4; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="380.0" y="28" text-anchor="middle" class="title">Ferromagnetic chain with first and second neighbors</text>
+<rect x="78.0" y="54.0" width="648.0" height="308.0" fill="none" class="axis"/>
+<line x1="78.0" x2="726.0" y1="362.0" y2="362.0" class="grid"/>
+<text x="68.0" y="366.0" text-anchor="end" class="tick">-0.16</text>
+<line x1="78.0" x2="726.0" y1="285.0" y2="285.0" class="grid"/>
+<text x="68.0" y="289.0" text-anchor="end" class="tick">0.96</text>
+<line x1="78.0" x2="726.0" y1="208.0" y2="208.0" class="grid"/>
+<text x="68.0" y="212.0" text-anchor="end" class="tick">2.08</text>
+<line x1="78.0" x2="726.0" y1="131.0" y2="131.0" class="grid"/>
+<text x="68.0" y="135.0" text-anchor="end" class="tick">3.2</text>
+<line x1="78.0" x2="726.0" y1="54.0" y2="54.0" class="grid"/>
+<text x="68.0" y="58.0" text-anchor="end" class="tick">4.32</text>
+<line x1="78.0" x2="78.0" y1="54.0" y2="362.0" class="grid"/>
+<text x="78.0" y="386.0" text-anchor="middle" class="tick">Γ</text>
+<line x1="726.0" x2="726.0" y1="54.0" y2="362.0" class="grid"/>
+<text x="726.0" y="386.0" text-anchor="middle" class="tick">X</text>
+<text x="380.0" y="412.0" text-anchor="middle" class="label">q-path</text>
+<text x="22" y="208.0" text-anchor="middle" transform="rotate(-90 22 208.0)" class="label">energy</text>
+<polyline points="78.0,351.0 84.48,350.9 90.96,350.5 97.44,349.8 103.9,348.8 110.4,347.6 116.9,346.2 123.4,344.4 129.8,342.4 136.3,340.2 142.8,337.7 149.3,335.0 155.8,332.0 162.2,328.8 168.7,325.5 175.2,321.8 181.7,318.0 188.2,314.0 194.6,309.9 201.1,305.5 207.6,301.0 214.1,296.3 220.6,291.5 227.0,286.6 233.5,281.5 240.0,276.4 246.5,271.1 253.0,265.7 259.4,260.3 265.9,254.9 272.4,249.3 278.9,243.8 285.4,238.2 291.8,232.6 298.3,226.9 304.8,221.3 311.3,215.8 317.8,210.2 324.2,204.7 330.7,199.2 337.2,193.8 343.7,188.5 350.2,183.2 356.6,178.0 363.1,172.9 369.6,167.9 376.1,163.1 382.6,158.3 389.0,153.7 395.5,149.1 402.0,144.8 408.5,140.5 415.0,136.4 421.4,132.4 427.9,128.6 434.4,124.9 440.9,121.4 447.4,118.0 453.8,114.8 460.3,111.7 466.8,108.8 473.3,106.1 479.8,103.4 486.2,101.0 492.7,98.67 499.2,96.5 505.7,94.46 512.2,92.57 518.6,90.81 525.1,89.18 531.6,87.68 538.1,86.3 544.6,85.04 551.0,83.89 557.5,82.84 564.0,81.9 570.5,81.05 577.0,80.29 583.4,79.62 589.9,79.03 596.4,78.51 602.9,78.06 609.4,77.67 615.8,77.33 622.3,77.05 628.8,76.82 635.3,76.62 641.8,76.47 648.2,76.34 654.7,76.24 661.2,76.16 667.7,76.11 674.2,76.07 680.6,76.04 687.1,76.02 693.6,76.01 700.1,76.0 706.6,76.0 713.0,76.0 719.5,76.0 726.0,76.0" fill="none" stroke="#2864a6" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="592.0" y="46.0" width="126" height="32.0" rx="5" fill="#ffffff" stroke="#d1d5db"/>
+<line x1="600.0" x2="622.0" y1="62.0" y2="62.0" stroke="#2864a6" stroke-width="2.4"/>
+<text x="630.0" y="66.0" class="tick">mode 1</text>
+</svg>
