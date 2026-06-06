@@ -1,4 +1,16 @@
+<div align="center">
+
 # SpinWave.jl
+
+Typed, validated linear spin-wave calculations for Julia.
+
+[![CI](https://github.com/jayren3996/SpinWave.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/jayren3996/SpinWave.jl/actions/workflows/CI.yml)
+[![Documentation](https://github.com/jayren3996/SpinWave.jl/actions/workflows/documentation.yml/badge.svg)](https://github.com/jayren3996/SpinWave.jl/actions/workflows/documentation.yml)
+[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://jayren3996.github.io/SpinWave.jl/)
+
+**[Read the documentation](https://jayren3996.github.io/SpinWave.jl/)**
+
+</div>
 
 `SpinWave.jl` is a compact Julia package for linear spin-wave calculations on
 explicit bilinear spin models. It now uses a typed model-building workflow:
