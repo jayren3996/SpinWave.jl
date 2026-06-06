@@ -9,4 +9,5 @@ using Test
     include("local_frame_tests.jl")
     include("hamiltonian_tests.jl")
     include("diagonalization_tests.jl")
+    include("spinwave_tests.jl")
 end
