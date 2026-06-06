@@ -1,0 +1,8 @@
+.DS_Store
+*.cov
+*.ji
+*.mem
+/Manifest.toml
+/docs/Manifest.toml
+/docs/build/
+/.worktrees/
