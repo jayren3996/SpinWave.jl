@@ -1,51 +1,73 @@
-#--- Spectrum
-function diagonalization!(D::Vector,
-                          T::Matrix,
-                          Hk::Matrix;
-                          ϵ::Float64=1e-6)
-    N = length(D) ÷ 2
-    C = try
-        cholesky(Hk)
-    catch
-        Hk .+= Diagonal(fill(ϵ,2N))
-        cholesky!(Hk)
-    end
-    Kd = C.L
-    K = C.U
-    Im = Diagonal([ones(N); -ones(N)])
-    temp = Hermitian(K * Im * Kd)
-    vals, vecs = eigen!(temp)
-    D[1:N] .= -1 * vals[1:N]
-    D[N+1:2N] .= vals[N+1:2N]
-    T .= inv(K) * vecs * Diagonal(sqrt.(D))
+"""
+    UnstableHamiltonianError
+
+Raised when a quadratic bosonic Hamiltonian is Hermitian but not positive
+semidefinite within the requested tolerance.
+"""
+struct UnstableHamiltonianError <: Exception
+    min_eigenvalue::Float64
+    tolerance::Float64
 end
 
-function spectrum!(Hk::Matrix, N::Int64)
-    Hk[N+1:end,:] *= -1
-    real(eigvals!(Hk))
+function Base.showerror(io::IO, err::UnstableHamiltonianError)
+    print(
+        io,
+        "bosonic Hamiltonian is unstable: minimum Hermitian eigenvalue ",
+        err.min_eigenvalue,
+        " is below tolerance ",
+        err.tolerance,
+    )
 end
-#--- Green Function
-function green!(Gω::Vector,
-                ω::Real,
-                D::Vector,
-                η::Real,
-                N::Int64)
-    @. Gω[1:N] = -η / ((ω + D[1:N])^2 + η^2)
-    @. Gω[N+1:end] = η / ((ω - D[N+1:end])^2 + η^2)
+
+"""
+    DiagonalizationResult
+
+Result of dense bosonic dynamical-matrix diagonalization.
+"""
+struct DiagonalizationResult
+    energies::Vector{Float64}
+    eigenvalues::Vector{ComplexF64}
+    eigenvectors::Matrix{ComplexF64}
 end
-#--- F Matrix
-function fmat!(Fk::Matrix,
-               Wk::Array,
-               Tk::Matrix,
-               N::Int64,
-               ND::Int64)
-    for i=1:ND, j=1:2*N
-        Fk[i,j] = real(dot(Tk[:,j], Wk[i,:,:], Tk[:,j]))
+
+"""
+    diagonalize_bosonic(H; tol=1e-9)
+
+Validate and diagonalize a dense quadratic bosonic Hamiltonian.
+
+The Hamiltonian must be Hermitian and positive semidefinite within `tol`. The
+returned energies are the nonnegative positive-norm branch of the eigenvalues of
+`ηH`, where `η = Diagonal([ones(N); -ones(N)])`.
+"""
+function diagonalize_bosonic(H::AbstractMatrix; tol::Real=1e-9)
+    size(H, 1) == size(H, 2) || throw(ArgumentError("bosonic Hamiltonian must be square"))
+    iseven(size(H, 1)) || throw(ArgumentError("bosonic Hamiltonian dimension must be even"))
+    all(isfinite, H) || throw(ArgumentError("bosonic Hamiltonian entries must be finite"))
+
+    Hc = Matrix{ComplexF64}(H)
+    hermitian_residual = norm(Hc - Hc')
+    hermitian_residual <= tol || throw(ArgumentError("bosonic Hamiltonian must be Hermitian; residual=$hermitian_residual"))
+
+    hvals = eigvals(Hermitian(Hc))
+    mineig = minimum(real.(hvals))
+    mineig >= -tol || throw(UnstableHamiltonianError(mineig, Float64(tol)))
+
+    N = size(Hc, 1) ÷ 2
+    metric = Diagonal(vcat(ones(Float64, N), -ones(Float64, N)))
+    dyn = Matrix(metric * Hc)
+    eig = eigen(dyn)
+    max_imag = maximum(abs, imag.(eig.values); init=0.0)
+    max_imag <= sqrt(tol) || throw(ArgumentError("bosonic dynamical matrix has complex modes; max imaginary part=$max_imag"))
+
+    real_values = real.(eig.values)
+    positives = sort!(collect(v for v in real_values if v > tol))
+    zeros_needed = N - length(positives)
+    if zeros_needed < 0
+        positives = positives[end-N+1:end]
+        zeros_needed = 0
     end
-end
-#---correlation
-function correlation(Fk::Matrix,
-                     Gω::Vector,
-                     N::Int64)
-    sum(Fk * Gω)/(2N)
+    energies = vcat(zeros(Float64, zeros_needed), positives)
+    length(energies) == N || throw(ArgumentError("could not identify $N nonnegative bosonic modes"))
+
+    return DiagonalizationResult(energies, ComplexF64.(eig.values), ComplexF64.(eig.vectors))
 end

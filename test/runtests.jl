@@ -8,4 +8,5 @@ using Test
     include("model_tests.jl")
     include("local_frame_tests.jl")
     include("hamiltonian_tests.jl")
+    include("diagonalization_tests.jl")
 end
