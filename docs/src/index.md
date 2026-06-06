@@ -1,9 +1,9 @@
 # SpinWave.jl
 
 `SpinWave.jl` builds and solves compact linear spin-wave models in Julia. It is
-organized around the same staged workflow used in mature spin-wave tools:
-define a lattice, add magnetic sites, register exchange matrices, add bonds,
-choose a reciprocal-space path, and compute the spectrum.
+organized around an explicit staged workflow: define a lattice, add magnetic
+sites, register exchange matrices, add bonds, choose a reciprocal-space path,
+and compute the spectrum.
 
 The current rebuilt core focuses on commensurate bilinear models. It validates
 model dimensions and numerical assumptions before solving, and returns a named
@@ -33,6 +33,8 @@ round.(spec.energies; digits=3)
 - [Models](manual/models.md) explains sites, exchange matrices, and bonds.
 - [Spectra](manual/spectra.md) covers `SpinWaveSpectrum`, `intensity`, and
   `broaden`.
+- [Examples](examples/ferromagnetic-chain.md) show runnable chain and lattice
+  models, including rendered SVG spectra generated from the example scripts.
 - [API Reference](reference/api.md) lists public docstrings.
 
 ## Current Scope

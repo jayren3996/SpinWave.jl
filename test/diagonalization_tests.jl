@@ -23,4 +23,15 @@
     ]
     expected = @. 2 * (1 - cos(2pi * qs))
     @test energies ≈ expected atol=1e-8
+
+    afm = SpinModel(lattice([1, 1, 1]))
+    addsite!(afm, :A, [0, 0, 0]; spin=1, moment=[0, 0, 1])
+    addsite!(afm, :B, [0.5, 0, 0]; spin=1, moment=[0, 0, -1])
+    addmatrix!(afm, :J, heisenberg(1.0))
+    addbond!(afm, :J, :A, :B, [0, 0, 0])
+    addbond!(afm, :J, :B, :A, [1, 0, 0])
+
+    afm_result = SpinWave.diagonalize_bosonic(SpinWave.bosonic_hamiltonian(afm, [0.1, 0, 0]))
+    @test afm_result.energies ≈ fill(2sin(0.1pi), 2) atol=1e-8
+    @test afm_result.metric_residual <= 1e-8
 end

@@ -8,14 +8,12 @@ Typed, validated linear spin-wave calculations for Julia.
 [![Documentation](https://github.com/jayren3996/SpinWave.jl/actions/workflows/documentation.yml/badge.svg)](https://github.com/jayren3996/SpinWave.jl/actions/workflows/documentation.yml)
 [![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://jayren3996.github.io/SpinWave.jl/)
 
-**[Read the documentation](https://jayren3996.github.io/SpinWave.jl/)**
-
 </div>
 
 `SpinWave.jl` is a compact Julia package for linear spin-wave calculations on
-explicit bilinear spin models. It now uses a typed model-building workflow:
-define a lattice, add magnetic sites, register exchange matrices, add bonds,
-choose a reciprocal-space path, and compute a named spectrum object.
+explicit bilinear spin models. It uses a typed model-building workflow: define
+a lattice, add magnetic sites, register exchange matrices, add bonds, choose a
+reciprocal-space path, and compute a named spectrum object.
 
 The rebuilt core is intentionally focused. It supports dense commensurate
 models with explicit bonds and validates inputs before solving. Space-group bond
@@ -63,8 +61,10 @@ size(grid.intensity) # (omega, q)
 | `docs/` | Documenter.jl manual and API reference |
 | `examples/` | Runnable scripts that are not tests |
 
-## References
+## Examples
 
-The public workflow is inspired by the staged model construction used by
-[SpinW](https://spinw.org/spinwdoc/), but the implementation is Julian: typed
-objects, explicit validation, and stable result shapes.
+Runnable scripts in `examples/` cover ferromagnetic and antiferromagnetic
+chains, a square-lattice antiferromagnet, anisotropic exchange, and a
+next-nearest-neighbor chain. They use the same public API as the quick start,
+can generate static SVG spectra for the documentation, and are exercised by the
+test suite.

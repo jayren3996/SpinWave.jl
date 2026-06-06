@@ -36,7 +36,8 @@ size(grid.intensity)
 
 The current dense solver rejects non-Hermitian Hamiltonians and Hermitian
 Hamiltonians with clearly negative eigenvalues. Semidefinite Hamiltonians are
-allowed so Goldstone modes can appear as zero-energy modes. It diagonalizes the
-bosonic dynamical matrix, selects the nonnegative positive-norm branch, and
-metric-normalizes those modes. Complex dynamical-matrix eigenvalues above
-tolerance are treated as unstable or inconsistent input.
+allowed when a positive-norm zero-mode branch can be identified numerically. It
+diagonalizes the bosonic dynamical matrix, selects the nonnegative
+positive-norm branch, and metric-normalizes those modes. Complex
+dynamical-matrix eigenvalues above tolerance are treated as unstable or
+inconsistent input.

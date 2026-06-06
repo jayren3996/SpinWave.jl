@@ -60,27 +60,50 @@ function diagonalize_bosonic(H::AbstractMatrix; tol::Real=1e-9)
     max_imag = maximum(abs, imag.(eig.values); init=0.0)
     max_imag <= sqrt(tol) || throw(ArgumentError("bosonic dynamical matrix has complex modes; max imaginary part=$max_imag"))
 
-    candidates = Tuple{Float64,Int,Float64}[]
-    for (idx, value) in pairs(real.(eig.values))
-        value >= -tol || continue
-        vec = eig.vectors[:, idx]
-        metric_norm = real(dot(vec, metric * vec))
-        metric_norm > tol || continue
-        push!(candidates, (max(value, 0.0), idx, metric_norm))
-    end
-    sort!(candidates; by=first)
+    candidates = _positive_metric_modes(real.(eig.values), eig.vectors, metric, Float64(tol))
     length(candidates) >= N || throw(ArgumentError("could not identify $N positive-norm bosonic modes"))
 
     energies = zeros(Float64, N)
     modes = Matrix{ComplexF64}(undef, 2N, N)
     for mode in 1:N
-        energy, idx, metric_norm = candidates[mode]
+        energy, vector = candidates[mode]
         energies[mode] = energy
-        modes[:, mode] .= eig.vectors[:, idx] ./ sqrt(metric_norm)
+        modes[:, mode] .= vector
     end
 
     metric_residual = norm(modes' * metric * modes - I(N))
     metric_residual <= sqrt(tol) || throw(ArgumentError("positive modes are not paraunitary-normalized; residual=$metric_residual"))
 
     return DiagonalizationResult(energies, ComplexF64.(eig.values), modes, metric_residual)
+end
+
+function _positive_metric_modes(values::AbstractVector{<:Real}, vectors::AbstractMatrix{<:Complex}, metric, tol::Float64)
+    cluster_tol = sqrt(tol)
+    order = sortperm(values)
+    candidates = Tuple{Float64,Vector{ComplexF64}}[]
+    cursor = firstindex(order)
+    while cursor <= lastindex(order)
+        first_value = values[order[cursor]]
+        last = cursor
+        while last < lastindex(order)
+            next_value = values[order[last + 1]]
+            abs(next_value - first_value) <= cluster_tol * max(1.0, abs(first_value)) || break
+            last += 1
+        end
+
+        if first_value >= -tol
+            group = order[cursor:last]
+            V = vectors[:, group]
+            gram = Hermitian(Matrix(V' * metric * V))
+            signature = eigen(gram)
+            for idx in eachindex(signature.values)
+                norm = real(signature.values[idx])
+                norm > tol || continue
+                vector = ComplexF64.(V * signature.vectors[:, idx]) ./ sqrt(norm)
+                push!(candidates, (max(first_value, 0.0), vector))
+            end
+        end
+        cursor = last + 1
+    end
+    return candidates
 end
