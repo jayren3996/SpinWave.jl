@@ -43,8 +43,8 @@ bags.
   bilinear spin interactions.
 - Make invalid models fail with clear `ArgumentError` or `DomainError`
   exceptions before numerical work begins.
-- Make Colpa/Bogoliubov diagonalization explicit and diagnostic: no hidden
-  mutation or blind diagonal shifts.
+- Make bosonic dynamical-matrix diagonalization explicit and diagnostic: no
+  hidden mutation or blind diagonal shifts.
 - Return a named `SpinWaveSpectrum` object with stable dimensions and metadata.
 - Add deterministic tests that verify constructors, validation, k-paths,
   Hamiltonian assembly, diagonalization failure modes, and at least one analytic
@@ -188,8 +188,8 @@ model or throws a clear exception. `spinwave` always validates unless
 
 Stores reciprocal-space scan points and labels:
 
-- `qpath(points; points_per_segment)` accepts vertices in reciprocal lattice
-  units and expands linearly,
+- `qpath(vertices; points)` accepts vertices in reciprocal lattice units and
+  expands linearly,
 - each segment includes its starting point and excludes duplicated interior
   vertices; the final endpoint is included exactly once,
 - stored fields include `q_rlu`, `q_cartesian`, `ticks`, and `labels`.
@@ -245,7 +245,7 @@ For every bond `(i, j, R, J)`:
 - rotate `J` into local spin frames,
 - include spin-length factors,
 - add particle-particle, particle-hole, hole-particle, and hole-hole blocks,
-- apply phase `exp(-im * dot(q_cartesian, r_j + R - r_i))`,
+- apply phase `exp(-2pi * im * dot(q_rlu, r_j + R - r_i))`,
 - add the conjugate counterpart once.
 
 The assembled bosonic Hamiltonian must be Hermitian to numerical tolerance. If
@@ -253,19 +253,20 @@ not, throw an error with the q-point index and Hermiticity residual.
 
 ### Diagonalization
 
-Use Colpa-style diagonalization for positive-definite bosonic quadratic forms:
+Use dense bosonic dynamical-matrix diagonalization for positive-semidefinite
+quadratic forms:
 
 1. verify `H` is Hermitian,
-2. try Cholesky without modifying `H`,
-3. if Cholesky fails, throw `UnstableHamiltonianError` with the q-point and
-   minimum Hermitian eigenvalue estimate,
-4. diagonalize the transformed Hermitian problem,
-5. sort modes by positive energy,
-6. verify nonnegative energies within tolerance,
-7. verify paraunitary normalization of the transform.
+2. verify the Hermitian form is positive semidefinite within tolerance,
+3. diagonalize `ηH`,
+4. reject complex mode eigenvalues above tolerance,
+5. sort the positive-norm branch by nonnegative energy,
+6. metric-normalize the selected modes,
+7. verify the selected modes satisfy metric normalization.
 
-No automatic diagonal shift is applied. A later release can provide an explicit
-`regularization` keyword, but the default must not hide instability.
+No automatic diagonal shift is applied. A later release can add a stricter
+Cholesky/Colpa path or explicit `regularization` keyword, but the default must
+not hide instability.
 
 ### Correlations
 
@@ -331,7 +332,7 @@ The docs should explain:
 - how to build sites, matrices, and bonds,
 - current solver scope and limitations,
 - shape conventions for energies, correlations, and broadened intensity,
-- numerical assumptions behind Colpa diagonalization.
+- numerical assumptions behind bosonic dynamical-matrix diagonalization.
 
 Examples must execute in the docs build when practical and avoid `PyPlot`.
 
@@ -360,7 +361,8 @@ Use test-driven development:
 3. Implement model-building types and validation.
 4. Implement local frames and interaction constructors.
 5. Implement Hamiltonian assembly for commensurate bilinear models.
-6. Implement Colpa diagonalization with explicit failure modes.
+6. Implement bosonic dynamical-matrix diagonalization with explicit failure
+   modes.
 7. Implement `spinwave`, `SpinWaveSpectrum`, intensity, and broadening.
 8. Add docs and README.
 9. Add CI/docs workflows.

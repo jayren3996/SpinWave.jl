@@ -2,6 +2,8 @@
     H = ComplexF64[2 0; 0 2]
     result = SpinWave.diagonalize_bosonic(H)
     @test result.energies ≈ [2.0]
+    @test size(result.modes) == (2, 1)
+    @test result.metric_residual <= 1e-8
 
     Hzero = zeros(ComplexF64, 2, 2)
     @test SpinWave.diagonalize_bosonic(Hzero).energies ≈ [0.0]

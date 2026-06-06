@@ -20,6 +20,8 @@ For example, two segments with counts `[3, 4]` produce `3 + 4 - 1 == 6`
 q-points. The [`QPath`](@ref) object stores:
 
 - `q_rlu[component, iq]`,
+- `q_cartesian[component, iq]` when constructed as `qpath(vertices, lat; ...)`,
+  otherwise `nothing`,
 - `ticks`, the vertex positions in the expanded path,
 - `labels`, one label per input vertex.
 

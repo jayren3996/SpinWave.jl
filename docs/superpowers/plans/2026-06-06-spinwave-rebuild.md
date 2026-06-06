@@ -4,7 +4,7 @@
 
 **Goal:** Rebuild SpinWave.jl around validated model objects, a stable spin-wave spectrum API, real tests, and a Documenter.jl manual.
 
-**Architecture:** Replace the old low-level array API with typed model-building layers: lattice and q-path primitives, mutable model builders, local-frame and Hamiltonian assembly internals, explicit bosonic diagonalization, and a named `SpinWaveSpectrum` result. Documentation and examples sit on top of the same public API used by tests.
+**Architecture:** Replace the old low-level array API with typed model-building layers: lattice and q-path primitives, mutable model builders, local-frame and Hamiltonian assembly internals, explicit bosonic dynamical-matrix diagonalization, and a named `SpinWaveSpectrum` result. Documentation and examples sit on top of the same public API used by tests.
 
 **Tech Stack:** Julia 1.10+, LinearAlgebra stdlib, Test stdlib, Documenter.jl v1, GitHub Actions.
 
@@ -20,7 +20,7 @@
 - Create: `src/Models.jl` for `SpinSite`, `ExchangeMatrix`, `Bond`, `SpinModel`, and builder methods.
 - Create: `src/Frames.jl` for local spin frames.
 - Create: `src/Hamiltonians.jl` for bosonic Hamiltonian assembly.
-- Replace: `src/Diagonalization.jl` with validated Colpa/dynamic diagonalization helpers.
+- Replace: `src/Diagonalization.jl` with validated bosonic dynamical-matrix diagonalization helpers.
 - Create: `src/Spectra.jl` for `SpinWaveSpectrum`, `spinwave`, `intensity`, and `broaden`.
 - Stop including: `src/HBlock.jl`, `src/WBlock.jl`, and `src/Solver.jl`; leave them deleted or unreferenced.
 - Create: `test/runtests.jl` plus focused test files.
@@ -295,6 +295,8 @@ Create `test/diagonalization_tests.jl`:
     H = [2.0 + 0im 0; 0 2.0 + 0im]
     result = SpinWave.diagonalize_bosonic(H)
     @test result.energies ≈ [2.0]
+    @test size(result.modes) == (2, 1)
+    @test result.metric_residual <= 1e-8
 
     @test_throws ArgumentError SpinWave.diagonalize_bosonic([1.0 1.0; 0.0 1.0])
     @test_throws SpinWave.UnstableHamiltonianError SpinWave.diagonalize_bosonic([1.0 0.0; 0.0 -1.0])
@@ -329,6 +331,7 @@ Behavior:
 - reject non-Hermitian matrices,
 - reject clearly indefinite Hermitian matrices,
 - compute positive magnon energies from the bosonic dynamical matrix,
+- store metric-normalized positive-branch mode vectors,
 - reject complex eigenvalues larger than tolerance.
 
 - [ ] **Step 4.4: Run tests to verify Task 4 passes**

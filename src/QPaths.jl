@@ -3,12 +3,14 @@
 
 Expanded reciprocal-space scan path.
 
-`q_rlu` is a `3 x nq` matrix of reciprocal-lattice-unit coordinates. `ticks`
-contains the column indices of the original vertices after endpoint
-de-duplication.
+`q_rlu` is a `3 x nq` matrix of reciprocal-lattice-unit coordinates.
+`q_cartesian` is either `nothing` or a `3 x nq` Cartesian matrix when the path
+is constructed with a [`Lattice`](@ref). `ticks` contains the column indices of
+the original vertices after endpoint de-duplication.
 """
 struct QPath
     q_rlu::Matrix{Float64}
+    q_cartesian::Union{Nothing,Matrix{Float64}}
     ticks::Vector{Int}
     labels::Vector{String}
 end
@@ -45,7 +47,18 @@ function qpath(vertices; points, labels=nothing)
     end
 
     q_rlu = reduce(hcat, columns)
-    return QPath(q_rlu, ticks, labs)
+    return QPath(q_rlu, nothing, ticks, labs)
+end
+
+"""
+    qpath(vertices, lat::Lattice; points, labels=nothing)
+
+Expand a q-path and also store Cartesian q-vectors using `lat.reciprocal`.
+"""
+function qpath(vertices, lat::Lattice; points, labels=nothing)
+    path = qpath(vertices; points=points, labels=labels)
+    q_cartesian = lat.reciprocal * path.q_rlu
+    return QPath(path.q_rlu, q_cartesian, path.ticks, path.labels)
 end
 
 Base.length(path::QPath) = size(path.q_rlu, 2)

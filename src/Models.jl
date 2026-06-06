@@ -82,12 +82,14 @@ end
 """
     exchange_matrix(M)
 
-Create a full `3 x 3` exchange matrix.
+Create a symmetric `3 x 3` exchange matrix. Use [`dm`](@ref) for an
+antisymmetric Dzyaloshinskii-Moriya interaction.
 """
 function exchange_matrix(M::AbstractMatrix{<:Real})
     size(M) == (3, 3) || throw(ArgumentError("exchange matrix must be 3 x 3"))
     A = Matrix{Float64}(M)
     all(isfinite, A) || throw(ArgumentError("exchange matrix entries must be finite"))
+    issymmetric(A) || throw(ArgumentError("exchange_matrix requires a symmetric matrix; use dm(D) for antisymmetric exchange"))
     return ExchangeMatrix(A)
 end
 
@@ -150,8 +152,8 @@ function validate(model::SpinModel)
     labels = [site.label for site in model.sites]
     length(unique(labels)) == length(labels) || throw(ArgumentError("site labels must be unique"))
     for bond in model.bonds
-        checkbounds(model.sites, bond.source)
-        checkbounds(model.sites, bond.target)
+        1 <= bond.source <= length(model.sites) || throw(ArgumentError("bond source index $(bond.source) is out of range"))
+        1 <= bond.target <= length(model.sites) || throw(ArgumentError("bond target index $(bond.target) is out of range"))
         haskey(model.matrices, bond.matrix) || throw(ArgumentError("bond references unknown exchange matrix $(bond.matrix)"))
     end
     return model

@@ -27,7 +27,8 @@ Result of dense bosonic dynamical-matrix diagonalization.
 struct DiagonalizationResult
     energies::Vector{Float64}
     eigenvalues::Vector{ComplexF64}
-    eigenvectors::Matrix{ComplexF64}
+    modes::Matrix{ComplexF64}
+    metric_residual::Float64
 end
 
 """
@@ -59,15 +60,27 @@ function diagonalize_bosonic(H::AbstractMatrix; tol::Real=1e-9)
     max_imag = maximum(abs, imag.(eig.values); init=0.0)
     max_imag <= sqrt(tol) || throw(ArgumentError("bosonic dynamical matrix has complex modes; max imaginary part=$max_imag"))
 
-    real_values = real.(eig.values)
-    positives = sort!(collect(v for v in real_values if v > tol))
-    zeros_needed = N - length(positives)
-    if zeros_needed < 0
-        positives = positives[end-N+1:end]
-        zeros_needed = 0
+    candidates = Tuple{Float64,Int,Float64}[]
+    for (idx, value) in pairs(real.(eig.values))
+        value >= -tol || continue
+        vec = eig.vectors[:, idx]
+        metric_norm = real(dot(vec, metric * vec))
+        metric_norm > tol || continue
+        push!(candidates, (max(value, 0.0), idx, metric_norm))
     end
-    energies = vcat(zeros(Float64, zeros_needed), positives)
-    length(energies) == N || throw(ArgumentError("could not identify $N nonnegative bosonic modes"))
+    sort!(candidates; by=first)
+    length(candidates) >= N || throw(ArgumentError("could not identify $N positive-norm bosonic modes"))
 
-    return DiagonalizationResult(energies, ComplexF64.(eig.values), ComplexF64.(eig.vectors))
+    energies = zeros(Float64, N)
+    modes = Matrix{ComplexF64}(undef, 2N, N)
+    for mode in 1:N
+        energy, idx, metric_norm = candidates[mode]
+        energies[mode] = energy
+        modes[:, mode] .= eig.vectors[:, idx] ./ sqrt(metric_norm)
+    end
+
+    metric_residual = norm(modes' * metric * modes - I(N))
+    metric_residual <= sqrt(tol) || throw(ArgumentError("positive modes are not paraunitary-normalized; residual=$metric_residual"))
+
+    return DiagonalizationResult(energies, ComplexF64.(eig.values), modes, metric_residual)
 end

@@ -22,4 +22,16 @@
     @test grid.qpoints === path
 
     @test_throws DomainError broaden(spec, range(0, 4; length=25); eta=0)
+
+    two = SpinModel(lattice([1, 1, 1]))
+    addsite!(two, :A, [0, 0, 0]; spin=1, moment=[0, 0, 1])
+    addsite!(two, :B, [0.5, 0, 0]; spin=1, moment=[0, 0, 1])
+    addmatrix!(two, :J, heisenberg(-1.0))
+    addbond!(two, :J, :A, :B, [0, 0, 0])
+    addbond!(two, :J, :B, :A, [1, 0, 0])
+    two_path = qpath([[0.1, 0, 0], [0.4, 0, 0]]; points=[3])
+    two_spec = spinwave(two, two_path)
+    two_weights = intensity(two_spec)
+    @test size(two_weights) == (2, 3)
+    @test !isapprox(two_weights[:, 1], two_weights[:, end]; atol=1e-8)
 end
